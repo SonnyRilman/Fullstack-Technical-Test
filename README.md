@@ -4,7 +4,7 @@ Sistem prediksi penjualan berbasis Machine Learning untuk mengklasifikasikan pro
 
 ---
 
-## 🏗️ Arsitektur Sistem
+## Arsitektur Sistem
 
 ```
 ┌─────────────────┐     HTTP/REST      ┌────────────────────┐
@@ -12,6 +12,7 @@ Sistem prediksi penjualan berbasis Machine Learning untuk mengklasifikasikan pro
 │  (TypeScript)   │   JWT Bearer Auth  │  (Python 3.14)     │
 │  Vite + Recharts│                    │                    │
 │  ML Dashboard   │                    └────────┬───────────┘
+│  (Modern API)   │                             │
 └─────────────────┘                             │
                                   ┌─────────────┴─────────────┐
                                   │                           │
@@ -23,14 +24,14 @@ Sistem prediksi penjualan berbasis Machine Learning untuk mengklasifikasikan pro
 ```
 
 **Alur Data:**
-1. User login → Backend validasi kredensial → Kembalikan JWT Token
+1. User login -> Backend validasi kredensial -> Kembalikan JWT Token
 2. Frontend menyimpan token di localStorage, attach ke semua request
-3. `GET /sales` → Backend baca CSV → Kembalikan data JSON ke frontend
-4. `POST /predict` → Backend load model joblib → Prediksi dengan Random Forest → Return hasil
+3. GET /sales -> Backend baca CSV -> Kembalikan data JSON ke frontend
+4. POST /predict -> Backend load model joblib -> Prediksi dengan Random Forest -> Return hasil
 
 ---
 
-## 🚀 Cara Menjalankan
+## Cara Menjalankan
 
 ### 1. Prasyarat
 - Python 3.10+
@@ -81,7 +82,7 @@ Frontend berjalan di: `http://localhost:5174` (atau port berikutnya jika 5173 te
 
 ---
 
-## 📁 Struktur Project
+## Struktur Project
 
 ```
 project-root/
@@ -130,7 +131,7 @@ project-root/
 
 ---
 
-## 🤖 Machine Learning
+## Machine Learning
 
 ### Problem
 Binary Classification: **Laris** / **Tidak Laris**
@@ -140,12 +141,12 @@ Binary Classification: **Laris** / **Tidak Laris**
 |-------------------|-------------------------|
 | jumlah_penjualan  | Jumlah unit terjual     |
 | harga             | Harga satuan (IDR)      |
-| diskon            | Persentase diskon (0–30)|
+| diskon            | Persentase diskon (0-30)|
 
 ### Model yang Diuji
 | Model               | Hasil        |
 |---------------------|--------------|
-| Random Forest       | ✅ **Terbaik** |
+| Random Forest       | **Terbaik**  |
 | Logistic Regression | Pembanding   |
 | Decision Tree       | Pembanding   |
 
@@ -156,24 +157,24 @@ Binary Classification: **Laris** / **Tidak Laris**
 
 ---
 
-## 🔌 API Endpoints
+## API Endpoints
 
 | Method | Endpoint       | Auth | Deskripsi                   |
 |--------|---------------|------|-----------------------------|
-| POST   | /auth/login   | ❌    | Login, return JWT token     |
-| GET    | /sales        | ✅    | List data penjualan (paginated) |
-| GET    | /sales/stats  | ✅    | Statistik agregat dataset   |
-| POST   | /predict      | ✅    | Prediksi status produk      |
-| GET    | /docs         | ❌    | Swagger UI dokumentasi      |
+| POST   | /auth/login   | No   | Login, return JWT token     |
+| GET    | /sales        | Yes  | List data penjualan (paginated) |
+| GET    | /sales/stats  | Yes  | Statistik agregat dataset   |
+| POST   | /predict      | Yes  | Prediksi status produk      |
+| GET    | /docs         | No   | Swagger UI dokumentasi      |
 
 ---
 
-## 💡 Design Decisions
+## Design Decisions
 
 1. **FastAPI** dipilih karena async-native, auto Swagger docs, dan type-safe dengan Pydantic
-2. **JWT sederhana** dengan python-jose — dummy user hardcoded (sesuai spesifikasi)
+2. **JWT sederhana** dengan python-jose - dummy user hardcoded (sesuai spesifikasi)
 3. **SHA-256** digunakan untuk hashing password (passlib/bcrypt tidak kompatibel Python 3.14)
-4. **Random Forest** dipilih sebagai model final — tidak perlu scaling, robust terhadap outlier
+4. **Random Forest** dipilih sebagai model final - tidak perlu scaling, robust terhadap outlier
 5. **`lru_cache`** digunakan agar model & data CSV hanya dimuat sekali ke memori
 6. **Vite + React TypeScript** untuk strong typing di seluruh API contract
 7. **Axios interceptors** menangani JWT injection dan redirect 401 otomatis
